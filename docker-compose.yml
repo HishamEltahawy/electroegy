@@ -1,0 +1,29 @@
+# setup services 
+version: '4.37'
+
+services:
+  djangoserver:
+    container_name: django
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+
+
+
+  redis:
+    image: redis:latest
+    container_name: redis
+
+
+  celery:
+    container_name: celery
+    build: .
+    command: celery -A ProjectFiles worker -l INFO 
+    restart: always 
+    depends_on:
+      - redis
+
+    
